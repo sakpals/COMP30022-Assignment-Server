@@ -7,8 +7,8 @@ from errors import error_list
 from db import db
 
 app = Flask(__name__)
-# Store database in memory
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+# Store database on disk
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 api = Api(app, errors=error_list)
