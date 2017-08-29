@@ -17,7 +17,7 @@ db.init_app(app)
 api.add_resource(UserLogin, '/user/login')
 api.add_resource(UserLogout, '/user/logout')
 api.add_resource(UserRegister, '/user/register')
-api.add_resource(UserProfile, '/profile/<user_id>/')
+api.add_resource(UserProfile, '/profile/<user_id>')
 
 if __name__ == '__main__':
     db.create_all(app=app)
