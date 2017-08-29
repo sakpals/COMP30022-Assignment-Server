@@ -3,6 +3,7 @@ from datetime import datetime
 from functools import wraps
 from flask import request
 
+from errors import UnauthorisedError
 from models.user import Token 
 from db import db
 
@@ -41,5 +42,5 @@ def authenticate(func):
             request.access_token = acct[1]
             return func(*args, **kwargs)
 
-        return {}, 401 
+        raise UnauthorisedError()
     return wrapper

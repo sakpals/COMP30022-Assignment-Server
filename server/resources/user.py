@@ -3,6 +3,7 @@ from flask import request
 
 from common.auth import authenticate
 from models.user import User
+from errors import *
 from db import db
 
 class UserLogin(Resource):
@@ -16,13 +17,13 @@ class UserLogin(Resource):
         # Find user, TODO: fix timing attack
         u = User.query.filter_by(username=args["username"]).first()
         if u == None:
-            return None, 401
+            raise UnauthorisedError()
         
         #Attempt login
         token = u.login(args["password"])
 
         if token == None:
-            return None, 401
+            raise UnauthorisedError()
         else:
             return {'access_token': token}
 
@@ -53,14 +54,27 @@ class UserRegister(Resource):
             # Should be more critical in Exception handling, rather than just 
             # catching all errors. Particularly this catches the case where
             # a tables unique constraint fails
-            return {"message": "Username already taken"}, 409
+            raise UserAlreadyExistsError()
 
         # We're all good, user created
         return {}, 201
 
 class UserProfile(Resource):
-    def get(self, user_id):
-        pass
+    def authorised_to_get(viewer, target):
+        return True
 
-    def put(self, user_id):
-        pass
+    @authenticate
+    def get(self, username):
+        user = User.query.filter_by(username=username).first()
+        if user == None:
+            raise NotFoundError()
+
+        if not self.authorised_to_get(request.user, user):
+            raise UnauthorisedError()
+
+        return user
+
+    @authenticate
+    def put(self, username):
+        if username != request.user.username:
+            raise UnauthorisedError()
