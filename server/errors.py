@@ -8,7 +8,7 @@ error_list = {
         'status': 409,
     },
     'NotFoundError': {
-        'message': "A resource with that ID no longer exists.",
+        'message': "Not Found",
         'status': 404,
     },
 }
