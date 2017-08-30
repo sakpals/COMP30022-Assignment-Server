@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, fields, marshal_with
 from flask import request
 
 from common.auth import authenticate
@@ -60,9 +60,18 @@ class UserRegister(Resource):
         return {}, 201
 
 class UserProfile(Resource):
-    def authorised_to_get(viewer, target):
+    def authorised_to_get(self, viewer, target):
         return True
 
+    # Defines the fields we want to return on get. Obviously we don't want
+    # to return users passwords on any request
+    profile_fields = {
+        'username': fields.String,
+        'description': fields.String,
+        'avatar_url': fields.String,
+    }
+
+    @marshal_with(profile_fields)
     @authenticate
     def get(self, username):
         user = User.query.filter_by(username=username).first()
@@ -78,3 +87,4 @@ class UserProfile(Resource):
     def put(self, username):
         if username != request.user.username:
             raise UnauthorisedError()
+        pass
