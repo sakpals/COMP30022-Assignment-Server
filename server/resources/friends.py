@@ -44,9 +44,7 @@ class FriendList(Resource):
 class FriendAccept(Resource):
     @authenticate
     def post(self, request_token):
-        friend_request = FriendshipRequest.query.filter_by(user_to=request.user, token=request_token).first()
-        if friend_request == None:
-            raise InvalidFriendRequestToken()
+        friend_request = FriendshipRequest.query.filter_by(user_to=request.user, token=request_token).one()
 
         friendship = Friendship.query.filter_by(me=request.user, friend=friend_request.user_from).first()
         if friendship != None:

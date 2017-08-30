@@ -3,7 +3,6 @@ from bcrypt import hashpw, gensalt
 from datetime import datetime
 
 from common.randomstring import generate as rs_generate
-from errors import NotFoundError
 from db import db
 
 # Defines the fields we want to return on get. Obviously we don't want
@@ -66,11 +65,10 @@ class User(db.Model):
 
     @staticmethod
     def find(username, fail_not_found=True):
-        user = User.query.filter_by(username=username).first()
-        if user == None and fail_not_found:
-            raise NotFoundError()
+        if fail_not_found:
+            return User.query.filter_by(username=username).one()
         else:
-            return user
+            return User.query.filter_by(username=username).first()
 
 class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
