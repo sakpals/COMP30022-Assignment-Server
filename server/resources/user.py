@@ -50,6 +50,7 @@ class UserRegister(Resource):
         try:
             db.session.add(user)
             db.session.commit()
+            access_token = user.add_token().token_string
         except Exception as e:
             # Should be more critical in Exception handling, rather than just 
             # catching all errors. Particularly this catches the case where
@@ -57,7 +58,7 @@ class UserRegister(Resource):
             raise UserAlreadyExistsError()
 
         # We're all good, user created
-        return {}, 201
+        return {'access_token': access_token}, 201
 
 class UserProfile(Resource):
     def authorised_to_get(self, viewer, target):
