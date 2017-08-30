@@ -30,8 +30,10 @@ class FriendRemove(Resource):
     pass
 
 class FriendIncomingRequests(Resource):
+
     incoming_fields = {
         'requests': fields.List(fields.Nested({
+            'token': fields.String,
             'profile': fields.Nested(profile_fields, attribute='user_from')
         }))
     }
@@ -45,7 +47,6 @@ class FriendOutgoingRequests(Resource):
 
     outgoing_fields = {
         'requests': fields.List(fields.Nested({
-            'token': fields.String,
             'profile': fields.Nested(profile_fields, attribute='user_to')
         }))
     }
