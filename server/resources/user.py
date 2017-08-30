@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse, fields, marshal_with
 from flask import request
 
 from common.auth import authenticate
+from common.datatypes import avatar_url
 from models.user import User
 from errors import *
 from db import db
@@ -61,8 +62,7 @@ class UserRegister(Resource):
         return {'access_token': access_token}, 201
 
 class UserProfile(Resource):
-    def authorised_to_get(self, viewer, target):
-        return True
+
 
     # Defines the fields we want to return on get. Obviously we don't want
     # to return users passwords on any request
@@ -84,8 +84,35 @@ class UserProfile(Resource):
 
         return user
 
+    @marshal_with(profile_fields)
     @authenticate
     def put(self, username):
-        if username != request.user.username:
+        user = User.query.filter_by(username=username).first()
+        if user == None:
+            raise NotFoundError()
+
+        if not self.authorised_to_set(request.user, user):
             raise UnauthorisedError()
-        pass
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('description')
+        parser.add_argument('avatar_url', type=avatar_url, help='Invalid URL: {error_msg}' )
+        args = parser.parse_args()
+
+        for arg in args:
+            setattr(user, arg, args[arg])
+
+        db.session.add(user)
+        db.session.commit()
+
+        return user
+
+    # The following two methods are authorisation for get/set of profile data.
+    # This should probably be moved into a separate module soon, but for now
+    # is handy to have local, obviously people can only set their own profile,
+    # but everyone can read everyone elses (for now)
+    def authorised_to_get(self, viewer, target):
+        return True
+
+    def authorised_to_set(self, setter, target):
+        return setter.username == target.username
