@@ -11,6 +11,10 @@ error_list = {
         'message': "Not Found",
         'status': 404,
     },
+    'AlreadySentFriendRequestError': {
+        'message': "Already requested friend",
+        'status': 400,
+    },
 }
 
 class UnauthorisedError(Exception):
@@ -20,4 +24,7 @@ class UserAlreadyExistsError(Exception):
     pass
 
 class NotFoundError(Exception):
+    pass
+
+class AlreadySentFriendRequestError(Exception):
     pass

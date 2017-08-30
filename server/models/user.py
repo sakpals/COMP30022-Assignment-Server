@@ -1,8 +1,18 @@
-import random, string
-
+from flask_restful import fields
 from bcrypt import hashpw, gensalt
 from datetime import datetime
+
+from common.randomstring import generate as rs_generate
+from errors import NotFoundError
 from db import db
+
+# Defines the fields we want to return on get. Obviously we don't want
+# to return users passwords on any request
+profile_fields = {
+    'username': fields.String,
+    'description': fields.String,
+    'avatar_url': fields.String,
+}
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,6 +64,14 @@ class User(db.Model):
                 args["avatar_url"]
                 )
 
+    @staticmethod
+    def find(username, fail_not_found=True):
+        user = User.query.filter_by(username=username).first()
+        if user == None and fail_not_found:
+            raise NotFoundError()
+        else:
+            return user
+
 class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     token_string = db.Column(db.String(128), unique=True, index=True)
@@ -61,7 +79,7 @@ class Token(db.Model):
     last_use = db.Column(db.DateTime)
 
     def __init__(self):
-        self.token_string = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(128)])
+        self.token_string = rs_generate(128)
         self.last_use = datetime.utcnow()
 
     def __str__(self):

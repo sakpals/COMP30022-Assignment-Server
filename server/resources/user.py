@@ -3,7 +3,7 @@ from flask import request
 
 from common.auth import authenticate
 from common.datatypes import avatar_url
-from models.user import User
+from models.user import User, profile_fields
 from errors import *
 from db import db
 
@@ -16,9 +16,7 @@ class UserLogin(Resource):
         args = parser.parse_args()
         
         # Find user, TODO: fix timing attack
-        u = User.query.filter_by(username=args["username"]).first()
-        if u == None:
-            raise UnauthorisedError()
+        u = User.find(args["username"])
         
         #Attempt login
         access_token = u.login(args["password"])
@@ -63,21 +61,10 @@ class UserRegister(Resource):
 
 class UserProfile(Resource):
 
-
-    # Defines the fields we want to return on get. Obviously we don't want
-    # to return users passwords on any request
-    profile_fields = {
-        'username': fields.String,
-        'description': fields.String,
-        'avatar_url': fields.String,
-    }
-
     @marshal_with(profile_fields)
     @authenticate
     def get(self, username):
-        user = User.query.filter_by(username=username).first()
-        if user == None:
-            raise NotFoundError()
+        user = User.find(username)
 
         if not self.authorised_to_get(request.user, user):
             raise UnauthorisedError()
@@ -87,9 +74,7 @@ class UserProfile(Resource):
     @marshal_with(profile_fields)
     @authenticate
     def put(self, username):
-        user = User.query.filter_by(username=username).first()
-        if user == None:
-            raise NotFoundError()
+        user = User.find(username)
 
         if not self.authorised_to_set(request.user, user):
             raise UnauthorisedError()
