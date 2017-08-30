@@ -20,12 +20,12 @@ class UserLogin(Resource):
             raise UnauthorisedError()
         
         #Attempt login
-        token = u.login(args["password"])
+        access_token = u.login(args["password"])
 
-        if token == None:
+        if access_token == None:
             raise UnauthorisedError()
         else:
-            return {'access_token': token}
+            return {'access_token': access_token}
 
 class UserLogout(Resource):
     @authenticate 
