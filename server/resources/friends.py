@@ -4,7 +4,7 @@ from flask import request
 
 from common.auth import authenticate
 from models.user import User, profile_fields
-from models.friends import FriendshipRequest
+from models.friends import FriendshipRequest, Friendship
 from errors import *
 from db import db
 
@@ -13,6 +13,10 @@ class FriendAdd(Resource):
     @authenticate
     def post(self, username):
         target = User.find(username)
+
+        if target == request.user:
+            raise SelfSpecifiedError()
+
         friend_request = FriendshipRequest.query.filter_by(user_from=request.user, user_to=target).first()
         if friend_request != None:
             raise AlreadySentFriendRequestError()
@@ -23,11 +27,54 @@ class FriendAdd(Resource):
 
         return {}, 201
 
+class FriendList(Resource):
+
+    friends_fields = {
+        'friends': fields.List(fields.Nested({
+            'profile': fields.Nested(profile_fields, attribute="friend")
+        }))
+    }
+
+    @marshal_with(friends_fields)
+    @authenticate
+    def get(self):
+        print(request.user.friends)
+        return {"friends": request.user.friends}
+
 class FriendAccept(Resource):
-    pass
+    @authenticate
+    def post(self, request_token):
+        friend_request = FriendshipRequest.query.filter_by(user_to=request.user, token=request_token).first()
+        if friend_request == None:
+            raise InvalidFriendRequestToken()
+
+        friendship = Friendship.query.filter_by(me=request.user, friend=friend_request.user_from).first()
+        if friendship != None:
+            db.session.delete(friend_request)
+            db.session.commit()
+            raise AlreadyFriendsError()
+
+        db.session.delete(friend_request)
+        Friendship.add_pair(friend_request.user_from, friend_request.user_to)
+        db.session.commit()
+
+        return {}
 
 class FriendRemove(Resource):
-    pass
+
+    @authenticate
+    def post(self, username):
+
+        friend = User.find(username)
+        friendship = Friendship.query.filter_by(me=request.user, friend=friend).one()
+
+        if friendship.friend == request.user:
+            raise SelfSpecifiedError()
+
+        Friendship.remove_friendship(friendship)
+        db.session.commit()
+
+        return {}
 
 class FriendIncomingRequests(Resource):
 

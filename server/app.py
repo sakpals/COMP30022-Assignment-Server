@@ -22,9 +22,10 @@ api.add_resource(UserLogout, '/user/logout')
 api.add_resource(UserRegister, '/user/register')
 api.add_resource(UserProfile, '/profile/<username>')
 
+api.add_resource(FriendList, '/friends')
 api.add_resource(FriendAdd, '/friends/add/<username>')
 api.add_resource(FriendAccept, '/friends/accept/<request_token>')
-api.add_resource(FriendRemove, '/friends/accept/<request_token>')
+api.add_resource(FriendRemove, '/friends/remove/<username>')
 api.add_resource(FriendIncomingRequests, '/friends/requests/in')
 api.add_resource(FriendOutgoingRequests, '/friends/requests/out')
 
