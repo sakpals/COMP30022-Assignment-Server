@@ -19,6 +19,10 @@ error_list = {
         'message': "You are already friends with this person",
         'status': 400,
     },
+    'LocationNotStored': {
+        'message': "Location is not stored for either you or the target",
+        'status': 404,
+    },
 
     # External errors:
     'NoResultFound': { # sqlalchemy.orm.exc.NoResultFound
@@ -40,4 +44,7 @@ class AlreadyFriendsError(Exception):
     pass
 
 class AlreadySentFriendRequestError(Exception):
+    pass
+
+class LocationNotStored(Exception):
     pass

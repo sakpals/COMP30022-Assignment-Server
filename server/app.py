@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from resources.friends import *
 from resources.user import *
+from resources.location import *
 from errors import error_list
 from db import db
 
@@ -28,6 +29,8 @@ api.add_resource(FriendAccept, '/friends/accept/<request_token>')
 api.add_resource(FriendRemove, '/friends/remove/<username>')
 api.add_resource(FriendIncomingRequests, '/friends/requests/in')
 api.add_resource(FriendOutgoingRequests, '/friends/requests/out')
+
+api.add_resource(LocationResource, '/location/<username>')
 
 db.init_app(app)
 db.create_all(app=app)

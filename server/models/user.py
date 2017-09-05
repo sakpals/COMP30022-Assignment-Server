@@ -19,6 +19,7 @@ class User(db.Model):
     hashed_password = db.Column(db.String(256))
     description = db.Column(db.String(4096))
     image_url = db.Column(db.String(512))
+    latlon = db.Column(db.String(128))
     tokens = db.relationship('Token', backref=db.backref('user', lazy='joined'),
                                 lazy='dynamic')
 
