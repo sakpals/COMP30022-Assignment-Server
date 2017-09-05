@@ -1,10 +1,12 @@
 from flask import Flask, Blueprint
 from flask_restful import Api
+from flask_sockets import Sockets
 from flask_sqlalchemy import SQLAlchemy
 
 from resources.friends import *
 from resources.user import *
 from resources.location import *
+from pubsub.engine import ws
 from errors import error_list
 from db import db
 
@@ -35,9 +37,15 @@ api.add_resource(LocationResource, '/location/<username>')
 db.init_app(app)
 db.create_all(app=app)
 
+sockets = Sockets(app)
 # Leaving this here for eventual API versioning.
+# sockets.register_blueprint(ws, url_prefix='/api/v%s' % API_VERSION)
 # app.register_blueprint(api_bp, url_prefix='/api/v%s' % API_VERSION)
+sockets.register_blueprint(ws)
 app.register_blueprint(api_bp)
 
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    from gevent import pywsgi
+    from geventwebsocket.handler import WebSocketHandler
+    server = pywsgi.WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+    server.serve_forever()

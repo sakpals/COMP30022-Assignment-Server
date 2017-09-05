@@ -11,4 +11,4 @@
 #
 # Should use requirements.txt in the future
 
-pip install flask-restful flask-sqlalchemy bcrypt geographiclib
+pip install flask-restful flask-sqlalchemy bcrypt geographiclib flask-sockets
