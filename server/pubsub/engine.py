@@ -73,7 +73,11 @@ class Router():
         # Eventually, we will only support JSON messages
         channel = Channel.find(channel_name)
         for user in channel.users:
-            Router.user_to_socket[user.username].send(str(message))
+            for socket in Router.user_to_socket[user.username]:
+                try:
+                    socket.send(str(message))
+                except:
+                    Router.user_to_socket[user.username].remove(socket)
 
     @staticmethod
     def delete_channel(channel_name, user):
@@ -85,8 +89,10 @@ class Router():
 @authenticate
 def echo_socket(socket):
     username = request.user.username
-    Router.user_to_socket[username] = socket
+    if username not in Router.user_to_socket:
+        Router.user_to_socket[username] = []
+    Router.user_to_socket[username].append(socket)
     while not socket.closed:
         gevent.sleep(0.1)
 
-    Router.user_to_socket[username] = None
+    Router.user_to_socket[username].remove(socket)
