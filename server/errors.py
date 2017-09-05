@@ -27,6 +27,14 @@ error_list = {
         'message': "Channel already exists",
         'status': 409,
     },
+    'AlreadyChannelMember': {
+        'message': "Already a member of this channel",
+        'status': 409,
+    },
+    'NotChannelMember': {
+        'message': "Not a member of this channel",
+        'status': 400,
+    },
 
     # External errors:
     'NoResultFound': { # sqlalchemy.orm.exc.NoResultFound
@@ -54,4 +62,10 @@ class LocationNotStored(Exception):
     pass
 
 class ChannelAlreadyExists(Exception):
+    pass
+
+class AlreadyChannelMember(Exception):
+    pass
+
+class NotChannelMember(Exception):
     pass

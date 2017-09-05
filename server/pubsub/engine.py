@@ -3,6 +3,7 @@ from flask import Blueprint, request
 from flask_sockets import Sockets
 
 from common.auth import authenticate
+from errors import *
 from db import db
 
 ws = Blueprint('ws', __name__)
@@ -47,16 +48,22 @@ class Router():
     @staticmethod
     def join_channel(channel_name, user):
         channel = Channel.find(channel_name)
-        channel.users.append(user)
-        db.session.add(channel)
-        db.session.commit()
+        if user in channel.users:
+            raise AlreadyChannelMember()
+        else:
+            channel.users.append(user)
+            db.session.add(channel)
+            db.session.commit()
 
     @staticmethod
     def part_channel(channel_name, user):
         channel = Channel.find(channel_name)
-        channel.users.remove(user)
-        db.session.add(channel)
-        db.session.commit()
+        if user in channels.users:
+            channel.users.remove(user)
+            db.session.add(channel)
+            db.session.commit()
+        else:
+            raise NotChannelMember()
 
     @staticmethod
     def message_channel(channel_name, message):
