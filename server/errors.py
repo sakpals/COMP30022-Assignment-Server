@@ -23,6 +23,10 @@ error_list = {
         'message': "Location is not stored for either you or the target",
         'status': 404,
     },
+    'ChannelAlreadyExists': {
+        'message': "Channel already exists",
+        'status': 409,
+    },
 
     # External errors:
     'NoResultFound': { # sqlalchemy.orm.exc.NoResultFound
@@ -47,4 +51,7 @@ class AlreadySentFriendRequestError(Exception):
     pass
 
 class LocationNotStored(Exception):
+    pass
+
+class ChannelAlreadyExists(Exception):
     pass

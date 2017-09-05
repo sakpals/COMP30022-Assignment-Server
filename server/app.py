@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from resources.friends import *
 from resources.user import *
 from resources.location import *
+from resources.pubsub import *
 from pubsub.engine import ws
 from errors import error_list
 from db import db
@@ -33,6 +34,11 @@ api.add_resource(FriendIncomingRequests, '/friends/requests/in')
 api.add_resource(FriendOutgoingRequests, '/friends/requests/out')
 
 api.add_resource(LocationResource, '/location/<username>')
+
+api.add_resource(ChannelCRUD, '/channel/<channel_name>')
+api.add_resource(ChannelJoin, '/channel/<channel_name>/join')
+api.add_resource(ChannelPart, '/channel/<channel_name>/leave')
+api.add_resource(ChannelMessage, '/channel/<channel_name>/message')
 
 db.init_app(app)
 db.create_all(app=app)

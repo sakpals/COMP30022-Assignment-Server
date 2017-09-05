@@ -3,6 +3,8 @@ from geographiclib.geodesic import Geodesic
 from db import db
 
 class Location(db.Model):
+    __tablename__ = 'location'
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship("User", backref=db.backref("location", uselist=False))

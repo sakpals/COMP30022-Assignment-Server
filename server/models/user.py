@@ -14,6 +14,8 @@ profile_fields = {
 }
 
 class User(db.Model):
+    __tablename__ = 'user'
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, index=True)
     hashed_password = db.Column(db.String(256))
@@ -72,6 +74,8 @@ class User(db.Model):
             return User.query.filter_by(username=username).first()
 
 class Token(db.Model):
+    __tablename__ = 'user_tokens'
+
     id = db.Column(db.Integer, primary_key=True)
     token_string = db.Column(db.String(128), unique=True, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

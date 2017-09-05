@@ -3,6 +3,8 @@ from datetime import datetime
 from common.randomstring import generate as rs_generate
 
 class FriendshipRequest(db.Model):
+    __tablename__ = 'friend_request'
+
     id = db.Column(db.Integer, primary_key=True)
 
     created = db.Column(db.DateTime)
@@ -21,6 +23,8 @@ class FriendshipRequest(db.Model):
         self.user_to = user_to
 
 class Friendship(db.Model):
+    __tablename__ = 'friend'
+
     id = db.Column(db.Integer, primary_key=True)
 
     created = db.Column(db.DateTime)
