@@ -43,7 +43,10 @@ class Router():
         channel.name = channel_name
         channel.users.append(user)
         db.session.add(channel)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            raise ChannelAlreadyExists()
 
     @staticmethod
     def join_channel(channel_name, user):
