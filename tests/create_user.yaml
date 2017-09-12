@@ -1,0 +1,30 @@
+- config:
+    - testset: "Basic user"
+- test: # create entity by POST
+    - name: "Create person"
+    - url: "/user/register"
+    - method: "POST"
+    - body: '{"username": "matt","password": "password","description": "my_description"}'
+    - headers: {Content-Type: application/json}
+    - expected_status: [201]
+    - extract_binds:
+        - 'access_token': {'jsonpath_mini': 'access_token'}
+
+- test:
+    - name: "Validate user"
+    - url: {'template': "/profile/matt?access_token=$access_token"}
+    - validators:
+        - compare: {jsonpath_mini: 'description', comparator: 'str_eq', expected: 'my_description'}
+
+- test:
+    - name: "Update your description"
+    - url: {'template': "/profile/matt?access_token=$access_token"}
+    - method: "PUT"
+    - body: '{"description": "my_new_description"}'
+    - headers: {Content-Type: application/json}
+
+- test:
+    - name: "Validate updated user"
+    - url: {'template': "/profile/matt?access_token=$access_token"}
+    - validators:
+        - compare: {jsonpath_mini: 'description', comparator: 'str_eq', expected: 'my_new_description'}
