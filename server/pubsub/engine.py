@@ -73,11 +73,12 @@ class Router():
         # Eventually, we will only support JSON messages
         channel = Channel.find(channel_name)
         for user in channel.users:
-            for socket in Router.user_to_socket[user.username]:
-                try:
-                    socket.send(str(message))
-                except:
-                    Router.user_to_socket[user.username].remove(socket)
+            if user.username in Router.user_to_socket:
+                for socket in Router.user_to_socket[user.username]:
+                    try:
+                        socket.send(str(message))
+                    except:
+                        Router.user_to_socket[user.username].remove(socket)
 
     @staticmethod
     def delete_channel(channel_name, user):
