@@ -14,9 +14,9 @@ from db import db
 API_VERSION="1"
 
 app = Flask(__name__)
-# Store database on disk
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# load config from disk
+app.config.from_pyfile('config.py')
+app.config.from_envvar('CHLORINE_CONFIG', silent=True)
 
 api_bp = Blueprint('api', __name__)
 

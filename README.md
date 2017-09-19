@@ -31,7 +31,7 @@ root
  +-server/ (stores all server components)
  |  |
  |  +-app.py (loads all components and starts listening socket)
- |  +-config.yaml (configuration for server, example provided at config.yaml.example)
+ |  +-config.py (configuration for server, override with ENV: CHLORINE_CONFIG)
  |  +-common/ (common methods for all resources: auth, datatypes)
  |  +-models/ (DB models for resources to use, M in MVC)
  |  +-resources/ (HTTP endpoints, C in MVC)
@@ -43,12 +43,6 @@ root
     +-*.yaml
 ```
 
-## Running server
-
-Once dependencies have been installed, you can start the server with `python server/app.py`
-
-## Development
-
 To run the server in development mode, use: `FLASK_DEBUG=1 python server/app.py`
 
 This will enable debug mode which:
@@ -56,3 +50,8 @@ This will enable debug mode which:
 - Prints stack trace and explicit exception on `raise`, rather than returning status code defined in `server/errors.py`
 - Provides an interactive debugger
 
+## Running server
+
+Once dependencies have been installed, you can start the server with `CHLORINE_CONFIG=production_config.py python server/app.py`
+
+`production_config.py` is a file which contains production variables, ie custom database, debug=False, etc...
