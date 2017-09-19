@@ -22,6 +22,27 @@ Flask was chosen for it's quick development cycle. `flask-restful` is a helpful 
 
 Pub-Sub is implemented with websockets. Data is published with a POST request, and users receive all their subscriptions through a single websocket channel.
 
+## Getting started with development
+
+### Code layout
+```
+root
+ |
+ +-server/ (stores all server components)
+ |  |
+ |  +-app.py (loads all components and starts listening socket)
+ |  +-config.yaml (configuration for server, example provided at config.yaml.example)
+ |  +-common/ (common methods for all resources: auth, datatypes)
+ |  +-models/ (DB models for resources to use, M in MVC)
+ |  +-resources/ (HTTP endpoints, C in MVC)
+ |  +-pubsub/ (components for pubsub engine)
+ |
+ +-run-tests.sh (runs tests/*.yaml)
+ +-tests/ (stores all tests cases)
+    |
+    +-*.yaml
+```
+
 ## Running server
 
 Once dependencies have been installed, you can start the server with `python server/app.py`
@@ -34,3 +55,4 @@ This will enable debug mode which:
 - Reloads code when files saved
 - Prints stack trace and explicit exception on `raise`, rather than returning status code defined in `server/errors.py`
 - Provides an interactive debugger
+
