@@ -61,7 +61,7 @@ class Router():
     @staticmethod
     def part_channel(channel_name, user):
         channel = Channel.find(channel_name)
-        if user in channels.users:
+        if user in channel.users:
             channel.users.remove(user)
             db.session.add(channel)
             db.session.commit()
