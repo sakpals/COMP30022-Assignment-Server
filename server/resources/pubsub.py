@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse, fields, marshal_with
 from flask import request
 
 from common.auth import authenticate
-from pubsub.engine import Router
+from pubsub.engine import Router, Channel, Message
 
 class ChannelCRUD(Resource):
     @authenticate
@@ -30,13 +30,14 @@ class ChannelPart(Resource):
 class ChannelMessage(Resource):
     @authenticate
     def post(self, channel_name):
+        # TODO Parse data as json
         parser = reqparse.RequestParser()
-        parser.add_argument('message', required=True, help="message is required")
+        parser.add_argument('type', required=True, help="type is required")
+        parser.add_argument('data', required=True, help="data is required")
         args = parser.parse_args()
 
-        message = {
-            'user': request.user.username,
-            'message': args.message,
-        }
+        channel = Channel.find(channel_name)
 
-        Router.message_channel(channel_name, message)
+        message = Message.new(channel, request.user, args['type'], args['data'])
+
+        Router.send(message)

@@ -35,6 +35,10 @@ error_list = {
         'message': "Not a member of this channel",
         'status': 400,
     },
+    'InvalidJSON': {
+        'message': "Supplied parameter is invalid JSON",
+        'status': 400,
+    },
 
     # External errors:
     'NoResultFound': { # sqlalchemy.orm.exc.NoResultFound
@@ -68,4 +72,7 @@ class AlreadyChannelMember(Exception):
     pass
 
 class NotChannelMember(Exception):
+    pass
+
+class InvalidJSON(Exception):
     pass
