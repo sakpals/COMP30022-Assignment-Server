@@ -2,7 +2,7 @@ import json
 import gevent
 from flask import Blueprint, request
 from flask_sockets import Sockets
-from flask_restful import fields
+from flask_restful import fields, marshal
 from uuid import uuid4
 
 from common.auth import authenticate
@@ -16,11 +16,15 @@ channel_members = db.Table('pubsub_channel_members',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
 
-message_marshall = {
+class MessageFormat(fields.Raw):
+    def format(self, value):
+        return json.loads(value)
+
+message_marshal = {
     'channel': fields.String(attribute="channel.name"),
     'user': fields.String(attribute="user.username"),
     'type': fields.String(attribute="type"),
-    'data': fields.String(attribute="data"),
+    'data': MessageFormat(attribute="data"),
     'id' : fields.String(attribute="uuid"),
     'prev': fields.String(attribute="prev_uuid"),
     'next': fields.String(attribute="next_uuid")
@@ -128,7 +132,7 @@ class Router():
     @staticmethod
     def send(message):
         # Eventually, we will only support JSON messages
-        m = message.to_string()
+        m = json.dumps(marshal(message, message_marshal))
         for user in message.channel.users:
             if user.username in Router.user_to_socket:
                 for socket in Router.user_to_socket[user.username]:

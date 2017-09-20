@@ -3,7 +3,7 @@ from flask import request
 
 from common.auth import authenticate
 from common.datatypes import json_string
-from pubsub.engine import Router, Channel, Message, message_marshall
+from pubsub.engine import Router, Channel, Message, message_marshal
 
 class ChannelCRUD(Resource):
     @authenticate
@@ -47,7 +47,7 @@ class ChannelMessage(Resource):
         Router.send(message)
 
     @authenticate
-    @marshal_with(message_marshall)
+    @marshal_with(message_marshal)
     def get(self, channel_name):
         parser = reqparse.RequestParser()
         parser.add_argument('from')
