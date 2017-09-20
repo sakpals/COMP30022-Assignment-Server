@@ -31,7 +31,6 @@ class ChannelPart(Resource):
 class ChannelMessage(Resource):
     @authenticate
     def post(self, channel_name):
-        # TODO Parse data as json
         parser = reqparse.RequestParser()
         parser.add_argument('type', required=True, help="type is required")
         parser.add_argument('data', type=json_string, required=True, help="data is required")

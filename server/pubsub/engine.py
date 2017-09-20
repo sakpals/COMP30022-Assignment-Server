@@ -139,7 +139,6 @@ class Router():
 
     @staticmethod
     def get_messages(channel_name, id_from=None, id_to=None):
-        # TODO implement from/to
         channel = Channel.find(channel_name)
         q = channel.messages
 
