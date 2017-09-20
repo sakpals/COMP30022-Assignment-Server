@@ -8,7 +8,11 @@ from pubsub.engine import Router, Channel, Message, message_marshall
 class ChannelCRUD(Resource):
     @authenticate
     def put(self, channel_name):
-        Router.new_channel(channel_name, request.user)
+        parser = reqparse.RequestParser()
+        parser.add_argument('persistent', type=bool, required=True, help="Persistent option required")
+        args = parser.parse_args()
+
+        Router.new_channel(channel_name, request.user, args['persistent'])
         return {}, 201
 
     @authenticate
