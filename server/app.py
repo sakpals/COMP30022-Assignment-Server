@@ -7,6 +7,7 @@ from resources.friends import *
 from resources.user import *
 from resources.location import *
 from resources.pubsub import *
+from resources.image import *
 from pubsub.engine import ws
 from errors import error_list
 from db import db
@@ -39,6 +40,9 @@ api.add_resource(ChannelCRUD, '/channel/<channel_name>')
 api.add_resource(ChannelJoin, '/channel/<channel_name>/join')
 api.add_resource(ChannelPart, '/channel/<channel_name>/leave')
 api.add_resource(ChannelMessage, '/channel/<channel_name>/message')
+
+api.add_resource(ImageUpload, '/image')
+api.add_resource(ImageView, '/image/<image_id>')
 
 db.init_app(app)
 db.create_all(app=app)
