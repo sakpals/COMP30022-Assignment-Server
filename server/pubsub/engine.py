@@ -35,12 +35,7 @@ class Message(db.Model):
         msg.channel_id = channel.id
         msg.user_id = user.id
         msg.type = msg_type
-
-        try:
-            json.loads(msg_data)
-            msg.data = msg_data
-        except:
-            raise InvalidJSON()
+        msg.data = msg_data
 
         msg.channel = channel
         msg.user = user
