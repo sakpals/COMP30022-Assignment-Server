@@ -1,14 +1,14 @@
 from flask import Flask, Blueprint
 from flask_restful import Api
-from flask_sockets import Sockets
 from flask_sqlalchemy import SQLAlchemy
+from flask_uwsgi_websocket import GeventWebSocket
 
 from resources.friends import *
 from resources.user import *
 from resources.location import *
 from resources.pubsub import *
 from resources.image import *
-from pubsub.engine import ws
+from pubsub.engine import ws_register
 from errors import error_list
 from db import db
 
@@ -47,21 +47,22 @@ api.add_resource(ImageView, '/image/<image_id>')
 db.init_app(app)
 db.create_all(app=app)
 
-sockets = Sockets(app)
 # Leaving this here for eventual API versioning.
-# sockets.register_blueprint(ws, url_prefix='/api/v%s' % API_VERSION)
 # app.register_blueprint(api_bp, url_prefix='/api/v%s' % API_VERSION)
-sockets.register_blueprint(ws)
 app.register_blueprint(api_bp)
 
-import logging
-logging.basicConfig(filename=app.config['LOG_ACCESS'], level=logging.INFO)
+## patch_request wraps a websocket function, patching Flask.request
+def patch_request(fn):
+    def wrap(ws):
+        with app.request_context(ws.environ):
+            fn(ws)
+    return wrap
+
+# Setup websocket route
+websocket = GeventWebSocket(app)
+ws_register = patch_request(ws_register)
+websocket.route('/sync')(ws_register)
 
 if __name__ == "__main__":
-    from gevent import pywsgi
-    from geventwebsocket.handler import WebSocketHandler
-
-    errors=open(app.config['LOG_ERRORS'], 'w')
-
-    server = pywsgi.WSGIServer(('0.0.0.0', 5000), app, handler_class=WebSocketHandler, error_log=errors)
-    server.serve_forever()
+    logfile = app.config['LOGFILE']
+    app.run(gevent=100, logto=logfile)

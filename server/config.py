@@ -4,5 +4,4 @@ SQLALCHEMY_ECHO=False
 MAX_CONTENT_LENGTH=4*1024*1024
 IMAGE_UPLOAD_DIRECTORY='images/'
 
-LOG_ACCESS='access.log'
-LOG_ERRORS='errors.log'
+LOGFILE='access.log'

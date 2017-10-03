@@ -42,7 +42,7 @@ root
     +-*.yaml
 ```
 
-To run the server in development mode, use: `FLASK_DEBUG=1 python server/app.py`
+To run the server in development mode, use: `FLASK_DEBUG=1 ./run-server.sh`
 
 This will enable debug mode which:
 - Reloads code when files saved
@@ -51,6 +51,6 @@ This will enable debug mode which:
 
 ## Running server
 
-Once dependencies have been installed, you can start the server with `CHLORINE_CONFIG=production_config.py python server/app.py`
+Once dependencies have been installed, you can start the server with `CHLORINE_CONFIG=production_config.py ./run-server.py`
 
 `production_config.py` is a file which contains production variables, ie custom database, debug=False, etc...

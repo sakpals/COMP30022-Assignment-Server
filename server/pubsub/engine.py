@@ -1,15 +1,12 @@
 import json
 import gevent
-from flask import Blueprint, request
-from flask_sockets import Sockets
+from flask import request
 from flask_restful import fields, marshal
 from uuid import uuid4
 
 from common.auth import authenticate
 from errors import *
 from db import db
-
-ws = Blueprint('ws', __name__)
 
 channel_members = db.Table('pubsub_channel_members',
     db.Column('channel_id', db.Integer, db.ForeignKey('pubsub_channel.id')),
@@ -160,14 +157,13 @@ class Router():
         db.session.commit()
 
 
-@ws.route('/sync')
 @authenticate
-def echo_socket(socket):
+def ws_register(socket):
     username = request.user.username
     if username not in Router.user_to_socket:
         Router.user_to_socket[username] = []
     Router.user_to_socket[username].append(socket)
-    while not socket.closed:
+    while socket.connected:
         gevent.sleep(0.1)
 
     Router.user_to_socket[username].remove(socket)
