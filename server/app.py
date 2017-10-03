@@ -54,8 +54,14 @@ sockets = Sockets(app)
 sockets.register_blueprint(ws)
 app.register_blueprint(api_bp)
 
+import logging
+logging.basicConfig(filename=app.config['LOG_ACCESS'], level=logging.INFO)
+
 if __name__ == "__main__":
     from gevent import pywsgi
     from geventwebsocket.handler import WebSocketHandler
-    server = pywsgi.WSGIServer(('0.0.0.0', 5000), app, handler_class=WebSocketHandler)
+
+    errors=open(app.config['LOG_ERRORS'], 'w')
+
+    server = pywsgi.WSGIServer(('0.0.0.0', 5000), app, handler_class=WebSocketHandler, error_log=errors)
     server.serve_forever()
