@@ -6,17 +6,16 @@ COMP30022 - Team Chlorine
 
 To install dependencies:
 
-Devlopment:
+1. Make sure you have the required libraries installed: `pip sqlite3 graphicsmagic boost`
 ```
-pip install flask-restful flask-sqlalchemy bcrypt geographiclib flask-sockets pyresttest futures
-```
-
-Production:
-```
-pip install flask-restful flask-sqlalchemy bcrypt geographiclib flask-sockets
+apt install python python-pip sqlite3 libgraphicsmagick++1-dev libboost-python1.40-dev
+yum install python python-pip sqlite3 GraphicsMagick-c++-devel boost-devel
+brew install sqlite3 python-pip graphicsmagick boost-python --with-python3
 ```
 
-or refer to: `install-deps.sh`
+2. Then run `pip install -r requirements.txt`
+
+## Information
 
 Flask was chosen for it's quick development cycle. `flask-restful` is a helpful extension to utilise models (with `flask-sqlalchemy`) and resources. We also use geographiclib to perform calculations on location data. 
 
