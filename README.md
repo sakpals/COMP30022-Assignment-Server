@@ -7,11 +7,11 @@ COMP30022 - Team Chlorine
 To install dependencies:
 
 1. Make sure you have the required libraries installed: `pip sqlite3 graphicsmagic boost`
-```
-apt install python python-pip sqlite3 libgraphicsmagick++1-dev libboost-python1.40-dev
-yum install python python-pip sqlite3 GraphicsMagick-c++-devel boost-devel
-brew install sqlite3 python-pip graphicsmagick boost-python --with-python3
-```
+   ```
+   apt install python python-pip sqlite3 libgraphicsmagick++1-dev libboost-python1.40-dev
+   yum install python python-pip sqlite3 GraphicsMagick-c++-devel boost-devel
+   brew install sqlite3 python-pip graphicsmagick boost-python --with-python3
+   ```
 
 2. Then run `pip install -r requirements.txt`
 
