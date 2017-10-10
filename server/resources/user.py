@@ -59,6 +59,12 @@ class UserRegister(Resource):
         # We're all good, user created
         return {'access_token': access_token}, 201
 
+class SelfProfile(Resource):
+    @marshal_with(profile_fields)
+    @authenticate
+    def get(self):
+        return request.user
+
 class UserProfile(Resource):
 
     @marshal_with(profile_fields)

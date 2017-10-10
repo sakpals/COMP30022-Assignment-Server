@@ -26,6 +26,7 @@ api.add_resource(UserLogin, '/user/login')
 api.add_resource(UserLogout, '/user/logout')
 api.add_resource(UserRegister, '/user/register')
 api.add_resource(UserProfile, '/profile/<username>')
+api.add_resource(SelfProfile, '/profile')
 
 api.add_resource(FriendList, '/friends')
 api.add_resource(FriendAdd, '/friends/add/<username>')
