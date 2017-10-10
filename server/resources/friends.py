@@ -17,6 +17,10 @@ class FriendAdd(Resource):
         if target == request.user:
             raise SelfSpecifiedError()
 
+        friendship = Friendship.query.filter_by(me=request.user, friend=target).first()
+        if friendship != None:
+            raise AlreadyFriendsError()
+
         friend_request = FriendshipRequest.query.filter_by(user_from=request.user, user_to=target).first()
         if friend_request != None:
             raise AlreadySentFriendRequestError()
