@@ -2,6 +2,7 @@ import json
 import gevent
 from flask import request
 from flask_restful import fields, marshal
+from datetime import datetime
 from uuid import uuid4
 
 from common.auth import authenticate
@@ -24,7 +25,8 @@ message_marshal = {
     'data': MessageFormat(attribute="data"),
     'id' : fields.String(attribute="uuid"),
     'prev': fields.String(attribute="prev_uuid"),
-    'next': fields.String(attribute="next_uuid")
+    'next': fields.String(attribute="next_uuid"),
+    'server_time': fields.String(attribute="server_time")
 }
 messages_marshal = {
     'messages': fields.List(fields.Nested(message_marshal))
@@ -42,6 +44,7 @@ class Message(db.Model):
     data = db.Column(db.String(4096))
     next_uuid = db.Column(db.String(16), db.ForeignKey('pubsub_message.id'), nullable=True)
     prev_uuid = db.Column(db.String(16), db.ForeignKey('pubsub_message.id'), nullable=True)
+    server_time = db.Column(db.DateTime)
 
     @staticmethod
     def new(channel, user, msg_type, msg_data):
@@ -54,6 +57,8 @@ class Message(db.Model):
 
         msg.channel = channel
         msg.user = user
+
+        msg.server_time = datetime.utcnow()
 
         if channel.persistent:
             # Might be a better way to do this

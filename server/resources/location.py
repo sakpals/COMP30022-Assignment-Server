@@ -1,4 +1,5 @@
 from flask_restful import Resource, reqparse, fields, marshal_with
+from datetime import datetime
 from flask import request
 
 from common.auth import authenticate
@@ -28,6 +29,7 @@ class LocationResource(Resource):
         location.lat = args.lat
         location.lon = args.lon
         location.user_id = target.id
+        location.updated = datetime.utcnow()
         db.session.add(location)
         db.session.commit()
 

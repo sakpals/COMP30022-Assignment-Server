@@ -8,6 +8,7 @@ class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship("User", backref=db.backref("location", uselist=False))
+    updated = db.Column(db.DateTime)
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
 
