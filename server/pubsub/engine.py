@@ -26,6 +26,9 @@ message_marshal = {
     'prev': fields.String(attribute="prev_uuid"),
     'next': fields.String(attribute="next_uuid")
 }
+messages_marshal = {
+    'messages': fields.List(fields.Nested(message_marshal))
+}
 
 class Message(db.Model):
     __tablename__ = 'pubsub_message'
