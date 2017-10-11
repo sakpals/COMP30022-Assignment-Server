@@ -71,13 +71,14 @@ class ChannelMessage(Resource):
     @authenticate
     @marshal_with(messages_marshal)
     def get(self, channel_name):
-        if channel_name.startswith("user_"):
-            if ("user_"+request.user.name) != channel_name:
-                raise UnauthorisedError()
-
         parser = reqparse.RequestParser()
         parser.add_argument('from')
         parser.add_argument('to')
         args = parser.parse_args()
 
-        return {"messages": Router.get_messages(channel_name, args['from'], args['to'])}
+        messages = Router.get_messages(channel_name, args['from'], args['to']) 
+        if channel_name.startswith("user_"):
+            if ("user_"+request.user.username) != channel_name:
+                messages = [x for x in messages if x.user == request.user]
+
+        return {"messages": messages}
