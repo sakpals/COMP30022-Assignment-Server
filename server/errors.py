@@ -1,48 +1,48 @@
 error_list = {
     'UnauthorisedError': {
-        'message': 'Unauthorised',
+        'message': {'error' : 'Unauthorised'},
         'status': 401,
     },
     'UserAlreadyExistsError': {
-        'message': "A user with that username already exists.",
+        'message': {'error' : "A user with that username already exists."},
         'status': 409,
     },
     'SelfSpecifiedError': {
-        'message': "Cannot specify yourself as an argument",
+        'message': {'error' : "Cannot specify yourself as an argument"},
         'status': '400',
     },
     'AlreadySentFriendRequestError': {
-        'message': "Already requested friend",
+        'message': {'error' : "Already requested friend"},
         'status': 400,
     },
     'AlreadyFriendsError': {
-        'message': "You are already friends with this person",
+        'message': {'error' : "You are already friends with this person"},
         'status': 400,
     },
     'LocationNotStored': {
-        'message': "Location is not stored for either you or the target",
+        'message': {'error' : "Location is not stored for either you or the target"},
         'status': 404,
     },
     'ChannelAlreadyExists': {
-        'message': "Channel already exists",
+        'message': {'error' : "Channel already exists"},
         'status': 409,
     },
     'AlreadyChannelMember': {
-        'message': "Already a member of this channel",
+        'message': {'error' : "Already a member of this channel"},
         'status': 409,
     },
     'NotChannelMember': {
-        'message': "Not a member of this channel",
+        'message': {'error' : "Not a member of this channel"},
         'status': 400,
     },
     'InvalidJSON': {
-        'message': "Supplied parameter is invalid JSON",
+        'message': {'error' : "Supplied parameter is invalid JSON"},
         'status': 400,
     },
 
     # External errors:
     'NoResultFound': { # sqlalchemy.orm.exc.NoResultFound
-        'message': "Not Found",
+        'message': {'error' : "Not Found"},
         'status': 404,
     },
 }
