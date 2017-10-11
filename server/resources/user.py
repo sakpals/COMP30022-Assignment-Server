@@ -4,6 +4,7 @@ from flask import request
 from common.auth import authenticate
 from common.datatypes import avatar_url
 from models.user import User, profile_fields
+from pubsub.engine import Router
 from errors import *
 from db import db
 
@@ -55,6 +56,8 @@ class UserRegister(Resource):
             # catching all errors. Particularly this catches the case where
             # a tables unique constraint fails
             raise UserAlreadyExistsError()
+
+        Router.new_channel("user_"+user.username, user, True)
 
         # We're all good, user created
         return {'access_token': access_token}, 201

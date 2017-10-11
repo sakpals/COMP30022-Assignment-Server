@@ -54,14 +54,7 @@ class ChannelMessage(Resource):
         parser.add_argument('data', type=json_string, required=True, help="data is required")
         args = parser.parse_args()
 
-        if channel_name.startswith("user_"):
-            channel = Channel.find(channel_name, False)
-            if channel == None:
-                username = channel_name[5:]
-                user = User.find(username)
-                channel = Router.new_channel(channel_name, user, True)
-        else:
-            channel = Channel.find(channel_name)
+        channel = Channel.find(channel_name)
 
         message = Message.new(channel, request.user, args['type'], args['data'])
 
