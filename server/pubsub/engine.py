@@ -114,6 +114,8 @@ class Router():
         except Exception as e:
             raise ChannelAlreadyExists()
 
+        return channel
+
     @staticmethod
     def join_channel(channel_name, user):
         channel = Channel.find(channel_name)
