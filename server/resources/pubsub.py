@@ -78,7 +78,7 @@ class ChannelMessage(Resource):
 
         messages = Router.get_messages(channel_name, args['from'], args['to']) 
         if channel_name.startswith("user_"):
-            if ("user_"+request.user.username) != channel_name:
+            if request.user.username != channel_name[5:]:
                 messages = [x for x in messages if x.user == request.user]
 
         return {"messages": messages}
