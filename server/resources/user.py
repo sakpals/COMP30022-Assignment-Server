@@ -51,13 +51,13 @@ class UserRegister(Resource):
             db.session.add(user)
             db.session.commit()
             access_token = user.add_token().token_string
+            Router.new_channel("user_"+user.username, user, True)
         except Exception as e:
             # Should be more critical in Exception handling, rather than just 
             # catching all errors. Particularly this catches the case where
             # a tables unique constraint fails
             raise UserAlreadyExistsError()
 
-        Router.new_channel("user_"+user.username, user, True)
 
         # We're all good, user created
         return {'access_token': access_token}, 201
