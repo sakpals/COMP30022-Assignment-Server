@@ -23,15 +23,21 @@ class LocationResource(Resource):
         parser.add_argument('lon', required=True, type=float, help='lon required')
         args = parser.parse_args()
 
-        location = target.location
-        if location == None:
-            location = Location()
-        location.lat = args.lat
-        location.lon = args.lon
-        location.user_id = target.id
-        location.updated = datetime.utcnow()
-        db.session.add(location)
-        db.session.commit()
+        # Comparision with 0.5 due to floating point error. 
+        if args['lat'] < 0.5 and args['lon'] < 0.5:
+            db.session.delete(target.location)
+            db.session.commit()
+
+        else:
+            location = target.location
+            if location == None:
+                location = Location()
+            location.lat = args.lat
+            location.lon = args.lon
+            location.user_id = target.id
+            location.updated = datetime.utcnow()
+            db.session.add(location)
+            db.session.commit()
 
         return {},200
 
