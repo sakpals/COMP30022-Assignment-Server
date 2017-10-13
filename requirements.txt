@@ -4,5 +4,5 @@ Flask-RESTful==0.3.6
 Flask-SQLAlchemy==2.3.0
 Flask-uWSGI-WebSocket==0.6.0
 geographiclib==1.48
-pgmagick==0.6.7
+python-resize-image==1.1.11
 pyresttest==1.7.1
