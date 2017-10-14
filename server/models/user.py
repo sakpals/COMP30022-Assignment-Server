@@ -60,9 +60,9 @@ class User(db.Model):
     @staticmethod
     def from_args(args):
         return User(
-                args["username"],
+                args["username"].strip(),
                 args["password"],
-                args["description"],
+                args["description"].strip(),
                 args["avatar_url"]
                 )
 
