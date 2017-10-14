@@ -42,7 +42,6 @@ class FriendList(Resource):
     @marshal_with(friends_fields)
     @authenticate
     def get(self):
-        print(request.user.friends)
         return {"friends": request.user.friends}
 
 class FriendAccept(Resource):
