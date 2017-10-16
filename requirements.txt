@@ -6,3 +6,4 @@ Flask-uWSGI-WebSocket==0.6.0
 geographiclib==1.48
 python-resize-image==1.1.11
 pyresttest==1.7.1
+gevent==1.2.2
