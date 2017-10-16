@@ -66,4 +66,5 @@ websocket.route('/sync')(ws_register)
 
 if __name__ == "__main__":
     logfile = app.config['LOGFILE']
-    app.run(gevent=100, logto=logfile)
+    params = {'gevent': 100, 'logto': logfile, 'reuse-port': True}
+    app.run(**params)
