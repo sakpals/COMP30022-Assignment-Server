@@ -26,7 +26,7 @@ message_marshal = {
     'id' : fields.String(attribute="uuid"),
     'prev': fields.String(attribute="prev_uuid"),
     'next': fields.String(attribute="next_uuid"),
-    'server_time': fields.String(attribute="server_time")
+    'server_time': fields.DateTime(dt_format='iso8601', attribute="server_time")
 }
 messages_marshal = {
     'messages': fields.List(fields.Nested(message_marshal))
