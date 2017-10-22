@@ -26,14 +26,14 @@
 - test:
     - group: "Friends"
     - name: "Add friend"
-    - url: "/friends/add/friend_b?access_token=$a_access_token"
+    - url: {'template': "/friends/add/friend_b?access_token=$a_access_token"}
     - method: "POST"
     - expected_status: [201]
 
 - test:
     - group: "Friends"
     - name: "View incoming friend"
-    - url: "/friends/requests/in?access_token=$b_access_token"
+    - url: {'template': "/friends/requests/in?access_token=$b_access_token"}
     - method: "GET"
     - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '1'}
     - extract_binds:
@@ -42,61 +42,61 @@
 - test:
     - group: "Friends"
     - name: "View outgoing friend"
-    - url: "/friends/requests/out?access_token=$a_access_token"
+    - url: {'template': "/friends/requests/out?access_token=$a_access_token"}
     - method: "GET"
     - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '1'}
 
 - test:
     - group: "Friends"
     - name: "Accept friend"
-    - url: "/friends/accept/$request_token?access_token=$a_access_token"
+    - url: {'template': "/friends/accept/$request_token?access_token=$b_access_token"}
     - method: "POST"
 
 - test:
     - group: "Friends"
     - name: "View incoming friend"
-    - url: "/friends/requests/in?access_token=$b_access_token"
+    - url: {'template': "/friends/requests/in?access_token=$b_access_token"}
     - method: "GET"
     - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '0'}
 
 - test:
     - group: "Friends"
     - name: "View outgoing friend"
-    - url: "/friends/requests/out?access_token=$a_access_token"
+    - url: {'template': "/friends/requests/out?access_token=$a_access_token"}
     - method: "GET"
     - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '0'}
 
 - test:
     - group: "Friends"
     - name: "View friends"
-    - url: "/friends?access_token=$a_access_token"
+    - url: {'template': "/friends?access_token=$a_access_token"}
     - method: "GET"
     - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '1'}
 
 - test:
     - group: "Friends"
     - name: "View friends"
-    - url: "/friends?access_token=$b_access_token"
+    - url: {'template': "/friends?access_token=$b_access_token"}
     - method: "GET"
     - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '1'}
 
 - test:
     - group: "Friends"
     - name: "Delete friend"
-    - url: "/friends/remove/friend_a?access_token=$b_access_token"
+    - url: {'template': "/friends/remove/friend_a?access_token=$b_access_token"}
     - method: "POST"
     - expected_status: [200]
 
 - test:
     - group: "Friends"
     - name: "View friends"
-    - url: "/friends?access_token=$a_access_token"
+    - url: {'template': "/friends?access_token=$a_access_token"}
     - method: "GET"
     - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '0'}
 
 - test:
     - group: "Friends"
     - name: "View friends"
-    - url: "/friends?access_token=$b_access_token"
+    - url: {'template': "/friends?access_token=$b_access_token"}
     - method: "GET"
     - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '0'}
