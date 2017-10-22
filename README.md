@@ -23,6 +23,17 @@ Pub-Sub is implemented with websockets. Data is published with a POST request, a
 
 ## Getting started with development
 
+### Running tests
+
+To run tests:
+
+1. Make sure all dependencies are installed.
+2. Clean database (`rm server/tmp.db`)
+3. Start the server (see below)
+4. Run the tests with `./run-tests.sh`
+
+Server log can be viewed at: `server/access.log`
+
 ### Code layout
 ```
 root
@@ -51,6 +62,14 @@ This will enable debug mode which:
 
 ## Running server
 
-Once dependencies have been installed, you can start the server with `CHLORINE_CONFIG=production_config.py ./run-server.py`
+Once dependencies have been installed, you can start the server with 
 
-`production_config.py` is a file which contains production variables, ie custom database, debug=False, etc...
+`CHLORINE_CONFIG=production_config.py ./run-server.py`
+
+for development. `production_config.py` is a file which contains production variables, ie custom database, debug=False, etc...
+
+- or -
+
+`./run-server.py`
+
+for default options
