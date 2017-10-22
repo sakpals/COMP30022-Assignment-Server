@@ -59,7 +59,7 @@ class FriendAccept(Resource):
         Friendship.add_pair(friend_request.user_from, friend_request.user_to)
         db.session.commit()
 
-        return {}
+        return {}, 200
 
 class FriendRemove(Resource):
 

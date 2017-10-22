@@ -12,15 +12,6 @@
     - extract_binds:
         - 'access_token': {'jsonpath_mini': 'access_token'}
 
-- test: # create entity by POST
-    - group: "Create user"
-    - name: "Duplicate person"
-    - url: "/user/register"
-    - method: "POST"
-    - body: '{"username": "user","password": "password","description": "my_description"}'
-    - headers: {Content-Type: application/json}
-    - expected_status: [409]
-
 - test:
     - group: "Create user"
     - name: "Validate user"

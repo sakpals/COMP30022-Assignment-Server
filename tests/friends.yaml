@@ -1,0 +1,102 @@
+- config:
+    - testset: "Friends"
+
+- test: # create entity by POST
+    - group: "Friends"
+    - name: "Create friend_a"
+    - url: "/user/register"
+    - method: "POST"
+    - body: '{"username": "friend_a","password": "password","description": "my_description"}'
+    - headers: {Content-Type: application/json}
+    - expected_status: [201]
+    - extract_binds:
+        - 'a_access_token': {'jsonpath_mini': 'access_token'}
+
+- test: # create entity by POST
+    - group: "Friends"
+    - name: "Create friend_b"
+    - url: "/user/register"
+    - method: "POST"
+    - body: '{"username": "friend_b","password": "password","description": "my_description"}'
+    - headers: {Content-Type: application/json}
+    - expected_status: [201]
+    - extract_binds:
+        - 'b_access_token': {'jsonpath_mini': 'access_token'}
+
+- test:
+    - group: "Friends"
+    - name: "Add friend"
+    - url: "/friends/add/friend_b?access_token=$a_access_token"
+    - method: "POST"
+    - expected_status: [201]
+
+- test:
+    - group: "Friends"
+    - name: "View incoming friend"
+    - url: "/friends/requests/in?access_token=$b_access_token"
+    - method: "GET"
+    - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '1'}
+    - extract_binds:
+        - 'request_token': {'jsonpath_mini': 'requests.0.token'}
+
+- test:
+    - group: "Friends"
+    - name: "View outgoing friend"
+    - url: "/friends/requests/out?access_token=$a_access_token"
+    - method: "GET"
+    - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '1'}
+
+- test:
+    - group: "Friends"
+    - name: "Accept friend"
+    - url: "/friends/accept/$request_token?access_token=$a_access_token"
+    - method: "POST"
+
+- test:
+    - group: "Friends"
+    - name: "View incoming friend"
+    - url: "/friends/requests/in?access_token=$b_access_token"
+    - method: "GET"
+    - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '0'}
+
+- test:
+    - group: "Friends"
+    - name: "View outgoing friend"
+    - url: "/friends/requests/out?access_token=$a_access_token"
+    - method: "GET"
+    - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '0'}
+
+- test:
+    - group: "Friends"
+    - name: "View friends"
+    - url: "/friends?access_token=$a_access_token"
+    - method: "GET"
+    - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '1'}
+
+- test:
+    - group: "Friends"
+    - name: "View friends"
+    - url: "/friends?access_token=$b_access_token"
+    - method: "GET"
+    - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '1'}
+
+- test:
+    - group: "Friends"
+    - name: "Delete friend"
+    - url: "/friends/remove/friend_a?access_token=$b_access_token"
+    - method: "POST"
+    - expected_status: [200]
+
+- test:
+    - group: "Friends"
+    - name: "View friends"
+    - url: "/friends?access_token=$a_access_token"
+    - method: "GET"
+    - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '0'}
+
+- test:
+    - group: "Friends"
+    - name: "View friends"
+    - url: "/friends?access_token=$b_access_token"
+    - method: "GET"
+    - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '0'}
