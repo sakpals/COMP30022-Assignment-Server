@@ -1,0 +1,52 @@
+- config:
+    - testset: "Basic user"
+
+- test: # create entity by POST
+    - group: "Check location"
+    - name: "Create person"
+    - url: "/user/register"
+    - method: "POST"
+    - body: '{"username": "source","password": "password","description": "my_description"}'
+    - headers: {Content-Type: application/json}
+    - expected_status: [201]
+    - extract_binds:
+        - 'source_access_token': {'jsonpath_mini': 'access_token'}
+
+- test: # create entity by POST
+    - group: "Check location"
+    - name: "Create person"
+    - url: "/user/register"
+    - method: "POST"
+    - body: '{"username": "target","password": "password","description": "my_description"}'
+    - headers: {Content-Type: application/json}
+    - expected_status: [201]
+    - extract_binds:
+        - 'target_access_token': {'jsonpath_mini': 'access_token'}
+
+- test:
+    - group: "Check location"
+    - url: {'template': "/location/target?access_token=$source_access_token"}
+    - expected_status: [404]
+
+- test:
+    - group: "Check location"
+    - name: "Update your location"
+    - url: {'template': "/location/source?access_token=$source_access_token"}
+    - method: "POST"
+    - body: '{"lat": 141.0, "lon": -37.4}'
+    - headers: {Content-Type: application/json}
+
+- test:
+    - group: "Check location"
+    - name: "Update your location"
+    - url: {'template': "/location/target?access_token=$target_access_token"}
+    - method: "POST"
+    - body: '{"lat": 142.0, "lon": -37.2}'
+    - headers: {Content-Type: application/json}
+
+- test:
+    - group: "Check location"
+    - url: {'template': "/location/target?access_token=$source_access_token"}
+    - validators:
+        - compare: {jsonpath_mini: 'distance', comparator: 'eq', expected: ''}
+        - compare: {jsonpath_mini: 'direction', comparator: 'eq', expected: ''}
