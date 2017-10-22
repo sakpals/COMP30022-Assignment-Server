@@ -1,0 +1,51 @@
+- config:
+    - testset: "Messaging"
+
+- test: # create entity by POST
+    - group: "Messages"
+    - name: "Create messenger_a"
+    - url: "/user/register"
+    - method: "POST"
+    - body: '{"username": "messenger_a","password": "password","description": "my_description"}'
+    - headers: {Content-Type: application/json}
+    - expected_status: [201]
+    - extract_binds:
+        - 'a_access_token': {'jsonpath_mini': 'access_token'}
+
+- test: # create entity by POST
+    - group: "Messages"
+    - name: "Create messenger_b"
+    - url: "/user/register"
+    - method: "POST"
+    - body: '{"username": "messenger_b","password": "password","description": "my_description"}'
+    - headers: {Content-Type: application/json}
+    - expected_status: [201]
+    - extract_binds:
+        - 'b_access_token': {'jsonpath_mini': 'access_token'}
+
+- test: # create entity by POST
+    - group: "Messages"
+    - name: "Create channel"
+    - url: "/channel/default?persistent=true&access_token=$a_access_token"
+    - method: "PUT"
+    - expected_status: [201]
+
+- test: # create entity by POST
+    - group: "Messages"
+    - name: "Join channel"
+    - url: "/channel/default/join?access_token=$b_access_token"
+    - method: "POST"
+
+- test: # create entity by POST
+    - group: "Messages"
+    - name: "Send message"
+    - url: "/channel/default/message?access_token=$a_access_token"
+    - method: "POST"
+    - body: '{"type": "text","data": "Hi!"}'
+    - headers: {Content-Type: application/json}
+
+- test: # create entity by POST
+    - group: "Messages"
+    - name: "Receive message"
+    - url: "/channel/default/message?access_token=$b_access_token"
+    - compare: {jsonpath_mini: "friends", comparator: "count_eq", expected: '1'}
