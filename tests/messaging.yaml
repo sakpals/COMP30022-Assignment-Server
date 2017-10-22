@@ -41,7 +41,7 @@
     - name: "Send message"
     - url: {'template': "/channel/default/message?access_token=$access_token_a"}
     - method: "POST"
-    - body: '{"type": "text","data": "Hi!"}'
+    - body: '{"type": "text","data": {"text": "Hi!"}}'
     - headers: {Content-Type: application/json}
 
 - test: # create entity by POST
