@@ -1,30 +1,44 @@
 - config:
     - testset: "Basic user"
+
 - test: # create entity by POST
+    - group: "Create user"
     - name: "Create person"
     - url: "/user/register"
     - method: "POST"
-    - body: '{"username": "matt","password": "password","description": "my_description"}'
+    - body: '{"username": "user","password": "password","description": "my_description"}'
     - headers: {Content-Type: application/json}
     - expected_status: [201]
     - extract_binds:
         - 'access_token': {'jsonpath_mini': 'access_token'}
 
+- test: # create entity by POST
+    - group: "Create user"
+    - name: "Duplicate person"
+    - url: "/user/register"
+    - method: "POST"
+    - body: '{"username": "user","password": "password","description": "my_description"}'
+    - headers: {Content-Type: application/json}
+    - expected_status: [409]
+
 - test:
+    - group: "Create user"
     - name: "Validate user"
-    - url: {'template': "/profile/matt?access_token=$access_token"}
+    - url: {'template': "/profile/user?access_token=$access_token"}
     - validators:
         - compare: {jsonpath_mini: 'description', comparator: 'str_eq', expected: 'my_description'}
 
 - test:
+    - group: "Create user"
     - name: "Update your description"
-    - url: {'template': "/profile/matt?access_token=$access_token"}
+    - url: {'template': "/profile/user?access_token=$access_token"}
     - method: "PUT"
     - body: '{"description": "my_new_description"}'
     - headers: {Content-Type: application/json}
 
 - test:
+    - group: "Create user"
     - name: "Validate updated user"
-    - url: {'template': "/profile/matt?access_token=$access_token"}
+    - url: {'template': "/profile/user?access_token=$access_token"}
     - validators:
         - compare: {jsonpath_mini: 'description', comparator: 'str_eq', expected: 'my_new_description'}
